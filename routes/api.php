@@ -21,3 +21,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('auth', [AuthController::class, 'google_redirect']);
 Route::get('auth/callback', [AuthController::class, 'google_callback']);
+
+Route::group(['middleware' => ['cors', 'json.response']], function () {
+
+    // ...
+
+    // public routes
+    Route::post('/login', [AuthController::class, 'login'])->name('login.api');
+    Route::post('/register',[AuthController::class, 'register'])->name('register.api');
+    
+    // ...
+
+    Route::middleware('auth:api')->group(function () {
+        // our routes to be protected will go in here
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout.api');
+    });
+
+});
